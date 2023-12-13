@@ -34,7 +34,7 @@ const Navbar = () => {
         <input className="peer hidden" type="checkbox" id="navbar-open" />
         <label
           className="absolute right-0 mt-1 cursor-pointer text-xl sm:hidden"
-          for="navbar-open"
+          htmlFor="navbar-open"
         >
           <span className="sr-only">Toggle Navigation</span>
           <GiHamburgerMenu />

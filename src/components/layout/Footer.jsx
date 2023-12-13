@@ -11,7 +11,7 @@ const footerNav = [
 const Footer = () => {
   return (
     <footer className="relative mt-20 bg-gray-900 px-4 pt-20">
-      <div className="absolute -top-10 left-1/2 h-16 w-16 -translate-x-1/2 rounded-xl border-4 border-sky-500 bg-white p-2 overflow-hidden">
+      <div className="absolute -top-10 left-1/2 h-16 w-16 -translate-x-1/2 rounded-xl border-4 border-blue-700 bg-white p-2 overflow-hidden">
         <IoLogoFreebsdDevil className="text-4xl" />
       </div>
       <nav
