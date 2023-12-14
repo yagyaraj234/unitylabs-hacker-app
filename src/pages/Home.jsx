@@ -41,14 +41,16 @@ const Home = () => {
   return (
     <div className="flex flex-col items-center justify-center">
       <InputBox
-        placeholder="Enter the hacker name"
+        placeholder="Search here"
         type="text"
         style="border-gray-700 font-medium text-lg border mx-auto px-4 text-gray-800"
         setSearchText={setSearchText}
       />
 
       {error && <p className="text-red-400">{error}</p>}
-      {data.length === 0 && !loading && <p className="text-red-400">No result found.</p>}
+      {data.length === 0 && !loading && (
+        <p className="text-red-400">No result.</p>
+      )}
 
       {loading ? (
         <Loader />
@@ -63,11 +65,11 @@ const Home = () => {
                 to={`/user/${user.objectID}`}
                 className="text-mono text-blue-600 font-medium"
               >
-                {user?.title}
+                {user?.title || "NO TITLE"}
               </NavLink>
 
               <div className="flex justify-end font-serif text-blue-400">
-                <p>~{user?.author}</p>
+                <p>~{user?.author || "NO AUTHOR"}</p>
               </div>
               <div className="flex gap-2 justify-end text-black">
                 <div className="flex gap-1 items-center">

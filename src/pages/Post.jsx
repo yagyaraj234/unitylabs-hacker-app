@@ -1,41 +1,42 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { POST_URI } from "../constant";
-import useFetch from "../hooks/useFetch";
 import Pagination from "../components/pagination";
 import axios from "axios";
+import CommentCard from "../components/CommentCard";
+import Loader from "../components/Loader";
 
 let commentsPerPage = 10;
 const Post = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState();
   const userId = useParams()?.ud;
   const url = `${POST_URI}${userId}`;
-  
 
   const fetchData = async () => {
-    // setLoading(true);
+    setLoading(true);
     try {
       const response = await axios.get(url);
-      console.log(response);
+
       if (!response.data) {
         throw new Error(`Error: ${response.status}`);
       }
       const result = await response.data;
-      console.log(result);
 
       setData(result);
     } catch (error) {
       setError(error.message);
     } finally {
-      // setLoading(false);
+      setLoading(false);
     }
   };
   useEffect(() => {
     fetchData();
   }, [url]);
-  const commentData = data?.children;
 
+  const commentData = data?.children;
+  // Pagination
   const indexOfLastComment = currentPage * commentsPerPage;
   const indexOfFirstComment = indexOfLastComment - commentsPerPage;
   const currentComments = commentData?.slice(
@@ -44,44 +45,44 @@ const Post = () => {
   );
 
   const paginate = (pageNumber) => {
-    setCurrentPage(pageNumber);
+    setLoading(true);
+
+    setTimeout(() => {
+      setCurrentPage(pageNumber);
+      setLoading(false);
+    }, 1000);
   };
-
-  function truncateString(str, maxLength) {
-    if (str.length <= maxLength) {
-      return str;
-    }
-
-    return str.slice(0, maxLength - 3) + "...";
-  }
-
+  
   return (
-    <div className="sm:p-10 max-sm:p-5 ">
-      <div className="flex flex-col">
-        <p className="text-5xl font-semibold">{data?.title}</p>
-        <p>{data?.points}</p>
-        <p>{data?.author}</p>
+    <div className="sm:p-10 max-sm:p-5 container  mx-auto  ">
+      {loading ? (
+        <Loader />
+      ) : (
+        <div className="flex flex-col">
+          <p className="text-5xl font-semibold">{data?.title}</p>
+          <p className="my-2 mt-5 text-xl font-semibold">Author:{data?.author}</p>
+          <p className=" text-xl font-semibold">
+            Points: {data?.points}
+          </p>
 
-        {/* Display Current Page Comments */}
-        <ul>
-          {currentComments?.map((comment) => (
-            <div className="flex flex-col" key={comment?.id}>
-              <p className="text-blue-900">
-                {truncateString(comment?.text, 250)}
-              </p>
-              <p>{comment?.author}</p>
-            </div>
-          ))}
-        </ul>
+          <p className="text-gray-600 mt-2 mb-10"> <span className="font-semibold text-gray-900">Posted On: </span>{data?.created_at?.split("T")[0]}</p>
 
-        {/* Pagination Component */}
-        <Pagination
-          itemsPerPage={commentsPerPage}
-          totalItems={commentData?.length}
-          currentPage={currentPage}
-          paginate={paginate}
-        />
-      </div>
+          {/* Display Current Page Comments */}
+
+          <CommentCard
+            currentComments={currentComments}
+            comments={commentData?.length}
+          />
+
+          {/* Pagination Component */}
+          <Pagination
+            itemsPerPage={commentsPerPage}
+            totalItems={commentData?.length}
+            currentPage={currentPage}
+            paginate={paginate}
+          />
+        </div>
+      )}
     </div>
   );
 };
